@@ -25,7 +25,7 @@ class Lich extends Sprite {
       if(frameCount % 60 == 0 && mc.life > 0){
        lAttacking = true; 
       }
-      if(frameCount % 120 == 0 && life > 0){
+      if(frameCount % 240 == 0 && life > 0){
        life+=10; 
       }
     }

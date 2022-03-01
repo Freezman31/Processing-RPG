@@ -6,6 +6,7 @@ Lich lich;
 Ice ice;
 Fire fire;
 Dialog d;
+NPC princess;
 
 
 PFont robotoC;
@@ -13,12 +14,12 @@ int mcCostume = 0;
 int mv = 5;
 boolean up, down, right, left = false;
 
-boolean showDialog = true;
+boolean showDialog = false;
 boolean attacking, lAttacking, canMcAttack = false; // MainCharacter attacking & lich attacking
 
 float moveX, moveY;
 
-boolean cave = false;
+boolean cave, firstDialog = false;
 
 void setup() {
 
@@ -26,11 +27,13 @@ void setup() {
   surface.setTitle("èRPéGé");
   robotoC = createFont("RobotoCondensed-Regular.ttf", 16);
 
-  d = new Dialog("Bonjour à toi jeune aventurier, aujourd'hui, tu vas devoir t'occuper de la liche de la grotte", "La princesse magique");
+  d = new Dialog("", "");
   //Sprite init
-  mc = new MainCharacter("", 15);
   bs = new BackgroundScene("home", 2);
   bds = new BorderScene("cover_violet", 2);
+  princess = new NPC("princess", 1);
+  princess.allerA(bds.x-150, bds.y-100);
+  mc = new MainCharacter("", 15);
   staff = new Item("staff", 1, -50, -143);
   ice = new Ice("ice", 1);
   fire = new Fire("fire", 1);
@@ -47,6 +50,15 @@ void draw() {
 
   if (showDialog)d.draw();
 
+  if (!cave || lich.life <= 0) {
+    princess.draw(); 
+    if (!cave) {
+      princess.allerA(bds.x-150, bds.y-100);
+    } else {
+      princess.allerA(bds.x+150, bds.y+150);
+    }
+  }
+
 
 
   if (mc.life>0)mc.draw(false); // real
@@ -58,7 +70,7 @@ void draw() {
   }
 
   //Attacks
-  if (attacking && staff.collected) {
+  if (attacking && staff.collected && mc.life > 0) {
     ice.draw();
   }
   if (cave && lAttacking) {
@@ -69,8 +81,8 @@ void draw() {
     textSize(64);
     text("You lose !", mc.y, mc.y);
   }
-  if(frameCount % 45 == 0) {
-   canMcAttack = true; 
+  if (frameCount % 45 == 0) {
+    canMcAttack = true;
   }
 }
 

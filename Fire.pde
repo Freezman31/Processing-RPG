@@ -3,6 +3,8 @@ class Fire extends Sprite {
   float pX, pY;
   Fire(String costumeName, int costumeNumb) {
     super(costumeName, costumeNumb);
+    fixerRotation = true;
+    changerTaille(150);
   }
 
   void draw() {

@@ -12,23 +12,25 @@ class MainCharacter extends Sprite { //<>//
   void draw(boolean colorDetection) {
     montrer();
 
-    //display health bar
-    fill(21, 200, 0);
-    noStroke();
-    rect(x-50, y-30, life, 5);
-    fill(158, 5, 1);
-    noStroke();
-    rect(x-50+life, y-30, 100-life, 5);
+    //display health bar if in the cave
+    if (cave) {
+      fill(21, 200, 0);
+      noStroke();
+      rect(x-50, y-30, life, 5);
+      fill(158, 5, 1);
+      noStroke();
+      rect(x-50+life, y-30, 100-life, 5);
+    }
 
     if (colorDetection) { // enable or disable the color detection to prevent lags
-      if (toucheCouleur(color(-5812331)) || toucheCouleur(-196407)) {
+      if (toucheCouleur(color(-5812331)) || toucheCouleur(-196407) || (touche(lich.x, lich.y, 100,100) && cave)) {
         bds.wallTouched = true;
       } else {
         bds.wallTouched = false;
       }
       if (toucheCouleur(color(-196385)) && !staff.collected) { // get the staff
         d.changeText("It's dangerous to go alone, take this !"); // nice
-        d.changeAuthor("A letter");
+        d.changeAuthor("A note");
         showDialog = true;
         staff.collected = true;
         changeCostume("withstaff", 27);
@@ -41,8 +43,18 @@ class MainCharacter extends Sprite { //<>//
       }
       if (toucheCouleur(color(-196407)) && cave) { //LAVA, very hot
         life-=0.5;
-        life = constrain(life, 0, 100);
       }
+      if(touche(princess.x, princess.y, 32,32)){
+        if(!firstDialog){
+         firstDialog = true;
+         d.changeText("Bonjour à toi jeune aventurier, aujourd'hui, tu vas devoir t'occuper de la liche de la grotte");
+         d.changeAuthor("La princesse");
+         showDialog = true;
+        }
+        bds.wallTouched = true;
+      }
+
+      life = constrain(life, 0, 100);
     }
   }
 
@@ -84,25 +96,22 @@ class MainCharacter extends Sprite { //<>//
       }
     } else {
       //if attacking, change costume
-      if (up) {
+      if (up || cost[0] == 10) {
         cost[0] = 24;
         cost[1] = 25;
         cost[2] = 26;
-      } else if (down) {
+      } else if (down || cost[0] == 1) {
         cost[0] = 21;
         cost[1] = 22;
         cost[2] = 23;
-      } else if (left) {
+      } else if (left || cost[0] == 4) {
         cost[0] = 18;
         cost[1] = 19;
         cost[2] = 20;
-      } else if (right) {
+      } else if (right || cost[0] == 7) {
         cost[0] = 15;
         cost[1] = 16;
         cost[2] = 17;
-      }else{
-       cost[1] = cost[0];
-       cost[2] = cost[0];
       }
     }
 
